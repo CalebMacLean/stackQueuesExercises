@@ -97,6 +97,7 @@ class Deque {
         this._dList = new DoublyLinkedList();
         this.first = null;
         this.last = null;
+        this.size = 0;
     }
 
     appendLeft(val) {
@@ -108,6 +109,8 @@ class Deque {
         }
         // add new val to first
         this.first = this._dList.head;
+        // increment size
+        this.size++;
         // return undefined
         return undefined;
     }
@@ -121,6 +124,8 @@ class Deque {
         }
         // add new val to last
         this.last = this._dList.tail;
+        // increment size
+        this.size++;
         // return undefined
         return undefined;
     }
@@ -137,6 +142,8 @@ class Deque {
         }
         // update deque first to match dlist structure
         this.first = this._dList.head;
+        // deincrement size
+        this.size--;
         // return removed val
         return first.val;
     }
@@ -153,6 +160,8 @@ class Deque {
         }
         // update deque last to match dlist structure
         this.last = this._dList.tail
+        // deincrement size
+        this.size--;
         // return removed val
         return last.val;
     }
@@ -170,28 +179,33 @@ class Deque {
     }
 }
 
-const deque = new Deque();
-console.log(`deque is empty: ${deque.isEmpty()}`)
-deque.appendLeft(1);
-console.log(`Dlist Head: ${deque._dList.head.val}; Dlist Tail: ${deque._dList.tail.val}`);
-console.log(`deque First: ${deque.first.val}; deque Last: ${deque.last.val}`);
-deque.appendLeft(2);
-console.log(`Dlist Head: ${deque._dList.head.val}; Dlist Tail: ${deque._dList.tail.val}`);
-console.log(`deque First: ${deque.first.val}; deque Last: ${deque.last.val}`);
-deque.appendRight(3);
-console.log(`Dlist Head: ${deque._dList.head.val}; Dlist Tail: ${deque._dList.tail.val}`);
-console.log(`deque First: ${deque.first.val}; deque Last: ${deque.last.val}`);
-console.log(`Node 3 Previous: ${deque.last.prev.val}`);
-deque.appendRight(4);
-console.log(`Dlist Head: ${deque._dList.head.val}; Dlist Tail: ${deque._dList.tail.val}`);
-console.log(`deque First: ${deque.first.val}; deque Last: ${deque.last.val}`);
-console.log(`Node 4 Previous: ${deque.last.prev.val}`);
-console.log(`Popping Left: ${deque.popLeft()}`);
-console.log(`Dlist Head: ${deque._dList.head.val}; Dlist Tail: ${deque._dList.tail.val}`);
-console.log(`deque First: ${deque.first.val}; deque Last: ${deque.last.val}`);
-console.log(`Popping Right: ${deque.popRight()}`);
-console.log(`Dlist Head: ${deque._dList.head.val}; Dlist Tail: ${deque._dList.tail.val}`);
-console.log(`deque First: ${deque.first.val}; deque Last: ${deque.last.val}`);
-console.log(`Peek Left: ${deque.peekLeft()}`);
-console.log(`Peek Right: ${deque.peekRight()}`);
-console.log(`deque is empty: ${deque.isEmpty()}`);
+function isBalanced(str) {
+    // declare deque
+    const deque = new Deque();
+    const brackets = {
+        '(' : ')',
+        '[' : ']',
+        '{' : '}'
+    };
+
+    for (let char of str) {
+        if(brackets[char]) {
+            deque.appendLeft(char);
+        } else if (char === ')' || char === ']' || char === '}') {
+            if(brackets[deque.popLeft()] !== char) {
+                return false;
+            }
+        }
+    }
+
+    return deque.isEmpty();
+}
+
+console.log(isBalanced("hello"), "-> true");
+console.log(isBalanced("(hi) [there]"), "-> true");
+console.log(isBalanced("(((hi)))"), "-> true");
+console.log(isBalanced("(hello"), "-> false");
+console.log(isBalanced("(nope]"), "-> false");
+console.log(isBalanced("((ok) [nope)]"), "-> false");
+
+
